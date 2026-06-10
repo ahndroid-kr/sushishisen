@@ -308,6 +308,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0e0a06}
       <div class="rule"></div>
       <div class="chef-wrap"><img id="i-title-chef" src=""></div>
       <button class="btn" onclick="startGame()">영업 시작</button>
+      <button onclick="showScoreboardOnly()"
+        style="background:transparent;border:none;color:rgba(200,170,110,.5);
+        font-size:11px;letter-spacing:2px;cursor:pointer;margin-top:14px;
+        font-family:sans-serif;font-weight:300;text-decoration:underline;
+        text-underline-offset:3px;padding:4px">
+        기록 보기
+      </button>
     </div>
   </div>
 
@@ -337,6 +344,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0e0a06}
         <div style="font-size:10px;color:rgba(180,150,90,.6);letter-spacing:3px;margin-bottom:10px;font-family:sans-serif;text-align:center">BEST RECORDS</div>
         <div id="score-list" style="width:100%;margin-bottom:16px;max-height:150px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(200,170,110,.3) transparent"></div>
         <button class="btn" onclick="startGame()" style="width:100%">다시하기</button>
+        <button id="clear-back-btn" onclick="show('s-title')"
+          style="display:none;background:transparent;border:none;color:rgba(200,170,110,.45);
+          font-size:11px;letter-spacing:2px;cursor:pointer;margin-top:10px;width:100%;
+          font-family:sans-serif;font-weight:300;padding:4px">
+          닫기
+        </button>
       </div>
     </div>
   </div>
@@ -650,7 +663,11 @@ function end(win){
     // 이름 입력 초기화
     document.getElementById('player-name').value='';
     document.getElementById('player-name').style.borderColor='rgba(200,170,110,.3)';
+    document.getElementById('i-clear-chef').style.display='block';
+    document.querySelector('#s-clear .result-title').style.display='block';
+    document.querySelector('#s-clear .rule').style.display='block';
     document.getElementById('name-section').style.display='block';
+    document.getElementById('clear-back-btn').style.display='none';
     document.getElementById('scoreboard-section').style.display='none';
     show('s-clear');
   } else {
@@ -684,6 +701,23 @@ window.addEventListener('load',async()=>{
   show('s-title');
 });
 
+
+// ─── 타이틀에서 기록 보기 ──────────────────
+async function showScoreboardOnly(){
+  // 셰프/타이틀 숨기기
+  document.getElementById('i-clear-chef').style.display='none';
+  document.querySelector('#s-clear .result-title').style.display='none';
+  document.querySelector('#s-clear .rule').style.display='none';
+  // 기존 클리어 화면 재활용 — 셰프/타이틀/클리어 메시지 숨기고 스코어보드만
+  document.getElementById('clear-msg').innerHTML='';
+  document.getElementById('name-section').style.display='none';
+  document.getElementById('scoreboard-section').style.display='block';
+  show('s-clear');
+  // 스코어보드 로드 (submitted=false → 하이라이트 없음)
+  await showScoreboard(false);
+  // 다시하기 버튼을 "닫기"로 교체
+  document.getElementById('clear-back-btn').style.display='block';
+}
 
 // ─── 재시작 확인 ─────────────────────────
 function confirmRestart(){
